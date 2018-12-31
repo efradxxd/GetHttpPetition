@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Front-end</title>
+</head>
+<body>
+    <h1>Respuesta del API GET multiple</h1>
+    <div id="entries">
+
+    </div>
+    <h2>Coloca el id</h2>
+    <textarea id="TxaConsulta"></textarea>
+    <button id="BtnConsulta"> upload</button>
+    <h1>Respuesta del API GET especifico</h1>
+    
+    <div id="ConsultaResponse">
+
+    </div>
+
+   
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(()=>{
+            let API_URL ='https://dscuyd48j9.execute-api.ap-south-1.amazonaws.com/dev';
+            $.ajax({
+                type: 'GET',
+                url:API_URL,
+
+                success: (data)=>{
+                    //$('#entries').html('');
+                    console.log(data);
+                    data.forEach(PrintData);
+                }
+            });
+        });
+        function PrintData(data){
+            $('#entries').append('<p>'+data.name+' '+data.guid+'<p>');
+        };
+        $('#BtnConsulta').on('click',()=>{
+            document.getElementById('ConsultaResponse').innerHTML='';
+            let parametro = $('#TxaConsulta').val()
+            let API_URL ='https://dscuyd48j9.execute-api.ap-south-1.amazonaws.com/dev/music/'+parametro;
+            $.ajax({
+                type: 'GET',
+                url:API_URL,
+
+                success: (data)=>{
+                    console.log(data);
+                    if(data.guid===""){
+                        $('#ConsultaResponse').append('<p>'+'Id no existente'+'</p>');
+                    }
+                    else{
+                        $('#ConsultaResponse').append('<p>'+data.name+' '+data.guid+' '+data.description+' '+data.image_url+'</p>');
+                    }
+                },
+                error: (error)=>{
+                    alert('id incorrecto, intenta de nuevo');
+                }
+            });
+        });
+        
+    </script>
+</body>
+</html>
